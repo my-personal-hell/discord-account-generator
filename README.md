@@ -1,0 +1,1 @@
+# nft-discord-advertiser
