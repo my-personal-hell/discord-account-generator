@@ -1,14 +1,19 @@
 import requests, json, discum
 from base64 import b64encode as b
+from discord_build_info_py import *
 
 class discord:
     def createSession(self, proxy) -> bool:
         self.session = requests.Session()
+        build_num, build_hash, build_id = getClientData('stable')
+        self.build_num = build_num
+        self.proxy = proxy
+        self.useragent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:90.0) Gecko/20100101 Firefox/90.0'
 
         if proxy is not None:
-            self.session.proxies.update({'http': 'http://' + proxy}) # ip:port OR user:pass@ip:port
+            self.session.proxies.update({'http': 'http://' + proxy, 'https': 'http://' + proxy}) # ip:port OR user:pass@ip:port
             try:
-                self.session.get('https://api.ipify.org/').text
+                self.session.get('https://ipv4.icanhazip.com/').text
             except:
                 return False
 
@@ -17,14 +22,14 @@ class discord:
         self.session.cookies['__dcfduid'] = self.dcfduid
         self.sdcfduid = response.headers['Set-Cookie'].split('__sdcfduid=')[1].split(';')[0]
         self.session.cookies['__sdcfduid'] = self.sdcfduid
-        self.session.cookies['locale'] = 'it'
+        self.session.cookies['locale'] = 'en'
 
         self.super_properties = b(json.dumps({
             "os": "Windows",
             "browser": "Firefox",
             "device": "",
-            "system_locale": "it-IT",
-            "browser_user_agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:90.0) Gecko/20100101 Firefox/90.0',
+            "system_locale": "en-US",
+            "browser_user_agent": self.useragent,
             "browser_version": "90.0",
             "os_version": "10",
             "referrer": "",
@@ -32,13 +37,13 @@ class discord:
             "referrer_current": "",
             "referring_domain_current": "",
             "release_channel": "stable",
-            "client_build_number": 108924,
+            "client_build_number": int(build_num),
             "client_event_source": None
         }, separators=(',', ':')).encode()).decode()
 
         self.session.headers.update({
             'Accept': '*/*',
-            'Accept-Language': 'it',
+            'Accept-Language': 'en',
             'Cache-Control': 'no-cache',
             'Connection': 'keep-alive',
             'Pragma': 'no-cache',
@@ -48,7 +53,7 @@ class discord:
             'Sec-Fetch-Dest': 'empty',
             'Sec-Fetch-Mode': 'cors',
             'Sec-Fetch-Site': 'same-origin',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:90.0) Gecko/20100101 Firefox/90.0',
+            'User-Agent': self.useragent,
             'X-Super-Properties': self.super_properties,
             'Cookie': '__dcfduid=' + self.dcfduid + '; __sdcfduid=' + self.sdcfduid,
             'TE': 'Trailers'
@@ -130,7 +135,9 @@ class discord:
 
     def beOnline(self):
         try:
-            bot = discum.Client(token=self.token, log=False)
+            print(self.proxy)
+            bot = discum.Client(token=self.token, log=False, user_agent=self.useragent, build_num=self.build_num, 
+                                proxy='http://' + self.proxy)
             @bot.gateway.command
             def websocket_activate(resp):
                 if resp.event.ready_supplemental:

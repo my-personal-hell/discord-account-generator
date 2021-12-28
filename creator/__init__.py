@@ -81,4 +81,7 @@ class program:
         print(session.email + ':' + session.password, session.token)
         end = time.time()
         print("Took", round(end-start), "seconds")
+        
+        print("Performing account check")
+        session.check()
 
