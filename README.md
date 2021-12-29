@@ -103,7 +103,7 @@ This project is licensed under the GNU GPLv3 License - see the [LICENSE](LICENSE
 
 ## Donate
 ETH: `hattywashere.eth`
-that's pretty much it
+that's pretty much it.
 
 ## About me
-You can read all about me with contact information [at my website](https://xlogic.sh)
+You can read all about me with contact information [at my website](https://xlogic.sh).
