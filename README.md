@@ -9,6 +9,7 @@ Creates accounts and verifies by email & phone verification. Supports proxies. U
 * [Installing](#installing)
 * [Quick example](#quick-example)
 * [License](#license)
+* [Donate](#donate)
 
 ## Features
 * Uses anti-captcha to solve hcaptcha's
@@ -98,3 +99,9 @@ pool.map(createAccount, list(range(create)))
 
 ## License
 This project is licensed under the GNU GPLv3 License - see the [LICENSE](LICENSE) file for details.
+
+## Donate
+ETH: `hattywashere.eth`
+that's pretty much it
+
+## About me
