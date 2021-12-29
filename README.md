@@ -1,3 +1,4 @@
+Created in about 4.5 hours
 # discord-account-generator
 Creates accounts and verifies by email & phone verification. Supports proxies. Uses sms-activate, kopeechka and anti captcha.
 
