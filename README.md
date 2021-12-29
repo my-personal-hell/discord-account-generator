@@ -10,6 +10,7 @@ Creates accounts and verifies by email & phone verification. Supports proxies. U
 * [Quick example](#quick-example)
 * [License](#license)
 * [Donate](#donate)
+* [About me](#about-me)
 
 ## Features
 * Uses anti-captcha to solve hcaptcha's
@@ -105,3 +106,4 @@ ETH: `hattywashere.eth`
 that's pretty much it
 
 ## About me
+You can read all about me with contact information [at my website](https://xlogic.sh)
