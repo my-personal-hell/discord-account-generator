@@ -17,7 +17,10 @@ class discord:
             except:
                 return False
 
-        response = self.session.get('https://discord.com/register')
+        try:
+            response = self.session.get('https://discord.com/register')
+        except:
+            return False
         self.dcfduid = response.headers['Set-Cookie'].split('__dcfduid=')[1].split(';')[0]
         self.session.cookies['__dcfduid'] = self.dcfduid
         self.sdcfduid = response.headers['Set-Cookie'].split('__sdcfduid=')[1].split(';')[0]
@@ -101,7 +104,8 @@ class discord:
             'password': password,
             'username': username
         }).json()
-        print(response)
+        if self.verbose:
+            print(response)
         self.token = response['token']
 
     def check(self):
@@ -130,14 +134,19 @@ class discord:
             'captcha_key': captcha_key,
             'token': token
         }).json()
-        print(response)
+        if self.verbose:
+            print(response)
         self.token = response['token']
 
     def beOnline(self):
         try:
-            print(self.proxy)
-            bot = discum.Client(token=self.token, log=False, user_agent=self.useragent, build_num=self.build_num, 
-                                proxy='http://' + self.proxy)
+            if self.verbose and self.proxy is not None:
+                print(self.proxy)
+            if self.proxy is not None:
+                bot = discum.Client(token=self.token, log=False, user_agent=self.useragent, build_num=self.build_num, 
+                        proxy='http://' + self.proxy)
+            else:
+                bot = discum.Client(token=self.token, log=False, user_agent=self.useragent, build_num=self.build_num)
             @bot.gateway.command
             def websocket_activate(resp):
                 if resp.event.ready_supplemental:
@@ -156,7 +165,8 @@ class discord:
         })
         if response.status_code == 204:
             return True
-        print(response.text)
+        if self.verbose:
+            print(response.text)
         return False
 
     def submitSms(self, code, number):
@@ -164,17 +174,22 @@ class discord:
             'code': code,
             'phone': '+' + number
         }).json()
-        print(token)
+        if self.verbose:
+            print(token)
         token = token['token']
         response = self.session.post('https://discord.com/api/v9/users/@me/phone', headers={'referer': 'https://discord.com/channels/@me', 'authorization': self.token}, json={
             'change_phone_reason': 'user_action_required',
             'password': self.password,
             'phone_token': token
         })
-        print(response.status_code)
+        if self.verbose:
+            print(response.status_code)
+        if response.status_code != 204:
+            Exception("Something went wrong with SMS verification")
 
-    def __init__(self, proxy) -> None:
+    def __init__(self, proxy, verbose) -> None:
         self.proxy = proxy
+        self.verbose = verbose
         if (not self.createSession(proxy)):
             Exception('Something went wrong with proxy!')
         self.getFingerPrint()
