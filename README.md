@@ -35,5 +35,66 @@ py -3 -m pip install -r requirements.txt
 ```
 And then you're ready to go
 
+## Quick Example
+### Create token
+```py
+from creator import create
+
+anticaptcha = 'a4d26ba7ec33ba9aa810449b42a6d011'
+kopeechka = '99355de805609eac0dc5750f49fb18e5'
+smsactivate = 'b97683d5f482A06051Ab7fc81bb4d495'
+
+create(capthaAPI=anticaptcha,
+       emailAPI=kopeechka,
+       phoneAPI=smsactivate,
+       verbose=True)
+```
+
+### Create token and continue with program with custom username
+```py
+from creator import create
+
+anticaptcha = 'a4d26ba7ec33ba9aa810449b42a6d011'
+kopeechka = '99355de805609eac0dc5750f49fb18e5'
+smsactivate = 'b97683d5f482A06051Ab7fc81bb4d495'
+
+session = create(capthaAPI=anticaptcha,
+       emailAPI=kopeechka,
+       phoneAPI=smsactivate,
+       username="Hatty was here")
+       
+token = session.token
+# continue, do whatever you want
+```
+
+### Simple multithreading with proxies
+```py
+from multiprocessing.dummy import Pool as ThreadPool
+from creator import create
+import random
+
+anticaptcha = 'a4d26ba7ec33ba9aa810449b42a6d011'
+kopeechka = '99355de805609eac0dc5750f49fb18e5'
+smsactivate = 'b97683d5f482A06051Ab7fc81bb4d495'
+create = 100
+
+proxies = ["ip:port", "user:password@ip:port"]
+
+def createAccount(a, retries=0):
+    try:
+        session = create(capthaAPI=anticaptcha,
+                         emailAPI=kopeechka,
+                         phoneAPI=smsactivate,
+                         proxy=proxies[random.randint(0, len(proxies)-1)])
+    except:
+        return createAccount(a, retries + 1)
+        
+    with open('tokens.txt', 'a+') as f:
+        f.write(session.token + '\n')
+
+pool = ThreadPool(100)
+pool.map(createAccount, list(range(create)))
+```
+
 ## License
 This project is licensed under the GNU GPLv3 License - see the [LICENSE](LICENSE) file for details.
