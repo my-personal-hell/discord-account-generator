@@ -79,7 +79,7 @@ import random
 anticaptcha = 'a4d26ba7ec33ba9aa810449b42a6d011'
 kopeechka = '99355de805609eac0dc5750f49fb18e5'
 smsactivate = 'b97683d5f482A06051Ab7fc81bb4d495'
-create = 100
+createAmount = 100
 
 proxies = ["ip:port", "user:password@ip:port"]
 
@@ -96,7 +96,7 @@ def createAccount(a, retries=0):
         f.write(session.token + '\n')
 
 pool = ThreadPool(100)
-pool.map(createAccount, list(range(create)))
+pool.map(createAccount, list(range(createAmount)))
 ```
 
 ## License
