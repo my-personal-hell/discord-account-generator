@@ -1,2 +1,3 @@
 requests
 git+https://github.com/Merubokkusu/Discord-S.C.U.M.git#egg=discum
+discord_build_info_py
