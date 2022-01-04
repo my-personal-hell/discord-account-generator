@@ -107,21 +107,19 @@ class discord:
         if self.verbose:
             print(response)
         self.token = response['token']
-
+        
     def check(self):
-        check = self.session.patch('https://discord.com/api/v9/users/@me', headers={
+        check = self.session.patch('https://discord.com/api/v9/users/@me/library', headers={
+            "authorization": self.token,
             'Referer': 'https://discord.com/channels/@me',
             "sec-ch-ua": "\" Not;A Brand\";v=\"99\", \"Firefox\";v=\"91\", \"Chromium\";v=\"91\"",
             "sec-ch-ua-mobile": "?0"
-        }, json={
-            'email': self.email,
-            'password': self.password
         })
         if check.status_code == 403:
             Exception("Token locked!")
         elif check.status_code == 400:
             Exception(check)
-
+            
     def getEmailVerificationToken(self, link):
         return self.session.get(link).url.split('#token=')[1]
 
