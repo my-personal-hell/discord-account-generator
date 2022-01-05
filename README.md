@@ -1,4 +1,4 @@
-Created in about 4.5 hours
+Created in about 4.5 hours - patched since 5th of January 2022
 ![image](https://user-images.githubusercontent.com/54858358/148139306-69499319-a0fc-4edc-9afc-e41187e857fc.png)
 
 ## STILL WORKING OF JANUARY THE 3TH 2022
