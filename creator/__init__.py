@@ -7,14 +7,15 @@ from creator.utils import generateDOB, generatePassword
 """
 
 Verification levels:
-0 = non verified
-1 = email verified
-2 = email & phone verified
+0 = unclaimed
+1 = non verified
+2 = email verified
+3 = email & phone verified
 
 """
 
 class create:
-    def __init__(self, username, captchaService=None, emailService=None, proxy=None, verbose=False, token=None, verificationLevel=2) -> None:
+    def __init__(self, username, captchaService=None, emailService=None, proxy=None, verbose=False, token=None, verificationLevel=1) -> None:
         self.token = None
 
         if verbose:
@@ -77,6 +78,9 @@ class create:
             log.info("Checking if account is unlocked")
             self.session.isLocked()
 
+            if verificationLevel == 1:
+                return
+
             emailVerificationLink = email.waitForEmail()
             emailVerificationToken = self.session.getEmailVerificationToken(emailVerificationLink)
             if verbose:
@@ -109,5 +113,8 @@ class create:
 
         self.session.firstTime()
         self.session.doOnline(emailVerify)
+
+        if verificationLevel == 1:
+                return
 
 
