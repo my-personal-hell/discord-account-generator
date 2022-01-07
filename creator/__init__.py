@@ -70,7 +70,7 @@ class create:
             if emailService is None:
                 return
             
-            self.email = randomEmail()
+            self.email = emailService.get()
             self.password = generatePassword()
 
             self.session.setEmailAndPassword(self.email.email, self.password)
@@ -86,15 +86,15 @@ class create:
             if verificationLevel == 1:
                 return
             
-            if verbose:
-                log.info("Sleeping for 5 seconds")
-            time.sleep(5)
+            # if verbose:
+            #     log.info("Sleeping for 5 seconds")
+            # time.sleep(5)
 
-            email = emailService.get()
-            self.email = email
-            if verbose:
-                log.info("Setting real email ->", email.email)
-            self.session.setEmailAndPassword(self.email.email, self.password)
+            # email = emailService.get()
+            # self.email = email
+            # if verbose:
+            #     log.info("Setting real email ->", email.email)
+            # self.session.setEmailAndPassword(self.email.email, self.password)
             self.session.resendEmail()
 
         self.session.firstTime()
@@ -124,14 +124,14 @@ class create:
             captchaToken = captchaService.waitForResult()
 
             if verbose:
-                log.info("Received captcha token, registering account")
+                log.info("Received captcha token, confirming account")
             if not self.session.verifyEmail(emailVerificationToken, captcha_key=captchaToken):
                 return
 
-            self.token = self.session.token
-            log.ok("Email verification completed, new token ->", self.token)
-            log.info("Checking if account is unlocked")
+        self.token = self.session.token
+        log.ok("Email verification completed, new token ->", self.token)
+        log.info("Checking if account is unlocked")
 
-            self.session.isLocked()
+        self.session.isLocked()
 
 

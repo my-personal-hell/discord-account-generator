@@ -86,6 +86,7 @@ class discord:
             payload['captcha_key'] = captcha_key
 
         response = self.session.post('https://discord.com/api/v9/auth/register', json=payload)
+        print(response.text)
         if response.status_code == 201:
             self.token = response.json()['token']
             return True
@@ -128,7 +129,6 @@ class discord:
             'Referer': 'https://discord.com/channels/@me',
             "authorization": self.token
         })
-        print(response.status_code)
         if response.status_code == 200:
             return True
         return False
