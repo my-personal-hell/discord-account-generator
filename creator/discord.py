@@ -61,7 +61,8 @@ class discord:
             'User-Agent': self.useragent,
             'X-Super-Properties': self.super_properties,
             'Cookie': '__dcfduid=' + self.dcfduid + '; __sdcfduid=' + self.sdcfduid,
-            'TE': 'Trailers'
+            'TE': 'Trailers',
+            "sec-ch-ua": "\" Not;A Brand\";v=\"99\", \"Firefox\";v=\"91\", \"Chromium\";v=\"91\""
         })
 
         return True
@@ -136,7 +137,6 @@ class discord:
 
     def verifyEmail(self, token, captcha_key=None):
         response = self.session.post('https://discord.com/api/v9/auth/verify', headers={
-            "sec-ch-ua": "\" Not;A Brand\";v=\"99\", \"Firefox\";v=\"91\", \"Chromium\";v=\"91\"",
             'referer': 'https://discord.com/verify',
             'authorization': self.token
         }, json={
@@ -145,10 +145,20 @@ class discord:
         })
         if response.status_code == 400:
             return False
-        response = response.json()
+        self.token = response.json()['token']
+        return True
+
+    def isLocked(self):
+        response = self.session.get('https://discord.com/api/v9/users/@me/library', headers={
+            'referer': 'https://discord.com/app',
+            'authorization': self.token
+        })
+        if response.status_code == 403:
+            if self.verbose:
+                log.error("Account locked!")
+            raise Exception()
         if self.verbose:
-            log.ok("Email verification successful, token ->", response['token'])
-        self.token = response['token']
+            log.ok("Account unlocked!")
         return True
 
     def __init__(self, proxy, verbose) -> None:

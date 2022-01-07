@@ -55,6 +55,9 @@ class create:
             log.info("Account going online")
 
         def emailVerify():
+            log.info("Checking if account is unlocked")
+            self.session.isLocked()
+
             self.birthday = generateDOB()
             self.session.setBirthday(self.birthday)
             if verbose:
@@ -69,7 +72,10 @@ class create:
 
             self.session.setEmailAndPassword(self.email, self.password)
             if verbose:
-                log.info("Requested email & set password", [self.email, self.password])
+                log.info("Requested + set email & set password", [self.email, self.password])
+
+            log.info("Checking if account is unlocked")
+            self.session.isLocked()
 
             emailVerificationLink = email.waitForEmail()
             emailVerificationToken = self.session.getEmailVerificationToken(emailVerificationLink)
@@ -94,7 +100,10 @@ class create:
                     return
 
                 self.token = self.session.token
-                self.ok("Email verification completed ->", self.token)
+                log.ok("Email verification completed, new token ->", self.token)
+                log.info("Checking if account is unlocked")
+
+                self.session.isLocked()
             
 
 
