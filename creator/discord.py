@@ -6,9 +6,9 @@ from discord_build_info_py import *
 class discord:
     def createSession(self):
         self.session = requests.Session()
-        build_num, build_hash, build_id = getClientData('stable')
+        build_num = getClientData('stable')[0]
         self.build_num = build_num
-        self.useragent = 'ozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36'
+        self.useragent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36'
 
         if self.proxy is not None:
             self.session.proxies.update({'http': 'http://' + self.proxy, 'https': 'http://' + self.proxy}) # ip:port OR user:pass@ip:port
@@ -128,6 +128,7 @@ class discord:
             'Referer': 'https://discord.com/channels/@me',
             "authorization": self.token
         })
+        print(response.status_code)
         if response.status_code == 200:
             return True
         return False
@@ -160,6 +161,12 @@ class discord:
         if self.verbose:
             log.ok("Account unlocked!")
         return True
+
+    def resendEmail(self):
+        self.session.post('https://discord.com/api/v9/auth/verify/resend', headers={
+            'referer': 'https://discord.com/channels/@me',
+            'authorization': self.token
+        })
 
     def __init__(self, proxy, verbose) -> None:
         self.proxy = proxy
